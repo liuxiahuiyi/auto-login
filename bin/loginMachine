@@ -1,0 +1,26 @@
+#!/usr/bin/expect -f
+
+set timeout 30
+set user [lindex $argv 0]
+set password [lindex $argv 1]
+set ip [lindex $argv 2]
+set port [lindex $argv 3]
+set length [llength $argv]
+if {$length==8} {
+  set user1 [lindex $argv 4]
+  set password1 [lindex $argv 5]
+  set ip1 [lindex $argv 6]
+  set port1 [lindex $argv 7]
+}
+
+spawn ssh $user@$ip -p $port
+expect "*password*"
+send "$password\r"
+if {$length==8} {
+  expect "*$*"
+  send "ssh $user1@$ip1 -p $port1\r"
+  expect "*password*"
+  send "$password1\r"
+}
+interact
+
