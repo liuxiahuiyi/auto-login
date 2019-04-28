@@ -1,0 +1,16 @@
+#!/usr/bin/expect -f
+
+set timeout 30
+set remote_ip [lindex $argv 0]
+set remote_port [lindex $argv 1]
+set mid_ip [lindex $argv 2]
+set mid_user [lindex $argv 3]
+set mid_password [lindex $argv 4]
+set mid_port [lindex $argv 5]
+set listen_port [lindex $argv 6]
+
+spawn ssh -Nf -L $listen_port:$remote_ip:$remote_port $mid_user@$mid_ip -p $mid_port
+expect "*password*"
+send "$mid_password\r"
+
+interact

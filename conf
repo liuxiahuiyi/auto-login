@@ -1,1 +1,8 @@
-nickname user password host port
+nickname         ip            user             password                        port(=22)
+baoleiji     jps.jd.com      wangyike1         Api_server2                        80
+sz           172.21.51.43     bi_tao
+ad           10.198.47.40     ads_aof
+aof          10.198.44.74   mart_risk_aof
+wxt_debug    10.191.33.247    admin        NzI3YjkxMDEwY2JlMTcxZjMzMjNjNGNh
+gpu          172.20.190.43  mart_risk_aof        0okm\(IJN
+mlp          10.198.133.131  wangyike1            xxx

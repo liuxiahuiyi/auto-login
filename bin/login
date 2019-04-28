@@ -1,19 +1,50 @@
 #!/bin/bash
+set -e
 
-eval `cat $(dirname "$0")/../conf|awk -v name="baoleiji" '{if($1==name){printf("user=%s; password=%s; ip=%s; port=%s",$2,$3,$4,$5)}}'`
+
+eval `cat $(dirname "$0")/../conf|awk -v name="baoleiji" '{if($1==name){printf("ip=%s; user=%s; password=%s; port=%s",$2,$3,$4,$5)}}'`
+if [ -z "$password" ]; then
+  echo "no password of baoleiji"
+  exit 1
+fi
 if [ -z "$port" ]; then
   port=22
 fi
 if [ -n "$1" ]; then
-  eval `cat $(dirname "$0")/../conf|awk -v name1="$1" '{if($1==name1){printf("user1=%s; password1=%s; ip1=%s; port1=%s",$2,$3,$4,$5)}}'`
-  if [ -z "$port1" ]; then
-    port1=22
+  eval `cat $(dirname "$0")/../conf|awk -v name1="$1" '{if($1==name1){printf("ip1=%s",$2)}}'`
+  if [ -z "$ip1" ]; then
+    echo "no ip of client $1"
+    exit 1
+  fi
+  if [ -n "$2" ]; then
+    eval `cat $(dirname "$0")/../conf|awk -v name2="$2" '{if($1==name2){printf("ip2=%s; user2=%s; password2=%s; port2=%s",$2,$3,$4,$5)}}'`
+    if [ -z "$password2" ]; then
+      echo "no password of machine $2"
+      exit 1
+    fi
+    if [ -z "$port2" ]; then
+      port2=22
+    fi
   fi
 fi
 
-if [ -n "$1" ]; then
-  $(dirname "$0")/loginMachine $user $password $ip $port $user1 $password1 $ip1 $port1
+echo "generate ssh key pair in machine (y/n)?"
+read enable
+if [ "$enable" = "y" ]; then
+  if [ ! -e ~/.ssh/id_rsa -o ! -e ~/.ssh/id_rsa.pub ]; then
+    echo "Input your mail to generate SSH key pair:"  
+    read mail  
+    echo "Your mail is: $mail"
+    ssh-keygen -t rsa -C "$mail" -b 4096
+  fi
+  rsa_pub=`cat ~/.ssh/id_rsa.pub`
+fi
+rsa_pub_replace="${rsa_pub//\//\\/}"
+if [ -n "$2" ]; then
+  $(dirname "$0")/loginMachine $ip $user $password $port $ip1 $ip2 $user2 $password2 $port2 "$rsa_pub" "$rsa_pub_replace"
+elif [ -n "$1" ]; then
+  $(dirname "$0")/loginMachine $ip $user $password $port $ip1 "$rsa_pub" "$rsa_pub_replace"
 else
-  $(dirname "$0")/loginMachine $user $password $ip $port
+  $(dirname "$0")/loginMachine $ip $user $password $port
 fi
 
