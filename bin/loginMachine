@@ -1,6 +1,6 @@
 #!/usr/bin/expect -f
 
-set timeout 30
+set timeout 10
 set ip [lindex $argv 0]
 set user [lindex $argv 1]
 set password [lindex $argv 2]
@@ -29,11 +29,14 @@ send "$password\r"
 
 if {$length>=8} {
   expect {
-    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
     -nocase "*ID*"        {send "$ip1\r"}
-    -nocase "*$*"         {send "ssh $user1@$ip1 -p $port1\r";exp_continue}
+    -nocase "*$*"         {send "ssh $user1@$ip1 -p $port1\r"}
+    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
+  }
+  expect {
+    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
     -nocase "*password*"  {send "$password1\r"}
-    eof
+    -nocase "*$*"         {send "\r"}
   }
 
   if [string compare $rsa_pub ""] {
@@ -44,10 +47,14 @@ if {$length>=8} {
 
 if {$length>=12} {
   expect {
-    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
     -nocase "*ID*"        {send "$ip2\r"}
-    -nocase "*$*"         {send "ssh $user2@$ip2 -p $port2\r";exp_continue}
+    -nocase "*$*"         {send "ssh $user2@$ip2 -p $port2\r"}
+    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
+  }
+  expect {
+    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
     -nocase "*password*"  {send "$password2\r"}
+    -nocase "*$*"         {send "\r"}
   }
 
   if [string compare $rsa_pub ""] {
