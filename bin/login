@@ -2,19 +2,22 @@
 set -e
 
 
-eval `cat $(dirname "$0")/../conf|awk -v name="baoleiji" '{if($1==name){printf("ip=%s; user=%s; password=%s; port=%s",$2,$3,$4,$5)}}'`
+eval `cat $(dirname "$0")/../conf|awk -v name="pivot" '{if($1==name){printf("ip=%s; user=%s; password=%s; port=%s",$2,$3,$4,$5)}}'`
 if [ -z "$password" ]; then
-  echo "no password of baoleiji"
+  echo "no password of pivot"
   exit 1
 fi
 if [ -z "$port" ]; then
   port=22
 fi
 if [ -n "$1" ]; then
-  eval `cat $(dirname "$0")/../conf|awk -v name1="$1" '{if($1==name1){printf("ip1=%s",$2)}}'`
-  if [ -z "$ip1" ]; then
-    echo "no ip of client $1"
+  eval `cat $(dirname "$0")/../conf|awk -v name1="$1" '{if($1==name1){printf("ip1=%s; user1=%s; password1=%s; port1=%s",$2,$3,$4,$5)}}'`
+  if [ -z "$password1" ]; then
+    echo "no password of machine $1"
     exit 1
+  fi
+  if [ -z "$port1" ]; then
+    port1=22
   fi
   if [ -n "$2" ]; then
     eval `cat $(dirname "$0")/../conf|awk -v name2="$2" '{if($1==name2){printf("ip2=%s; user2=%s; password2=%s; port2=%s",$2,$3,$4,$5)}}'`
@@ -41,9 +44,9 @@ if [ "$enable" = "y" ]; then
 fi
 rsa_pub_replace="${rsa_pub//\//\\/}"
 if [ -n "$2" ]; then
-  $(dirname "$0")/loginMachine $ip $user $password $port $ip1 $ip2 $user2 $password2 $port2 "$rsa_pub" "$rsa_pub_replace"
+  $(dirname "$0")/loginMachine $ip $user $password $port $ip1 $user1 $password1 $port1 $ip2 $user2 $password2 $port2 "$rsa_pub" "$rsa_pub_replace"
 elif [ -n "$1" ]; then
-  $(dirname "$0")/loginMachine $ip $user $password $port $ip1 "$rsa_pub" "$rsa_pub_replace"
+  $(dirname "$0")/loginMachine $ip $user $password $port $ip1 $user1 $password1 $port1 "$rsa_pub" "$rsa_pub_replace"
 else
   $(dirname "$0")/loginMachine $ip $user $password $port
 fi

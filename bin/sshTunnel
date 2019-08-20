@@ -10,7 +10,9 @@ set mid_port [lindex $argv 5]
 set listen_port [lindex $argv 6]
 
 spawn ssh -Nf -L $listen_port:$remote_ip:$remote_port $mid_user@$mid_ip -p $mid_port
-expect "*password*"
-send "$mid_password\r"
+expect {
+  -nocase "*password*"  {send "$mid_password\r;exp_continue"}
+  -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
+}
 
 interact

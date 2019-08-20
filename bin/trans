@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-eval `cat $(dirname "$0")/../conf|awk -v name="baoleiji" '{if($1==name){printf("ip=%s; user=%s; password=%s; port=%s",$2,$3,$4,$5)}}'`
+eval `cat $(dirname "$0")/../conf|awk -v name="pivot" '{if($1==name){printf("ip=%s; user=%s; password=%s; port=%s",$2,$3,$4,$5)}}'`
 if [ -z "$password" ]; then
-  echo "no password of baoleiji"
+  echo "no password of pivot"
   exit 1
 fi
 if [ -z "$port" ]; then
@@ -32,6 +32,10 @@ else
 fi
 
 $(dirname "$0")/sshTunnel $ip1 $port1 $ip $user $password $port $listen_port
+
+pids=`ps -ef|grep 'ssh -Nf -L'|grep -v grep|awk '{print $2}'`
+trap "kill -9 $pids" EXIT
+
 if [ $1 == "u" ]; then
   scp -rp -P $listen_port $3 $user1@127.0.0.1:$4
 elif [ $1 == "d" ]; then
@@ -40,4 +44,4 @@ else
   ehco "unkown action $1"
   exit 1
 fi
-ps -ef|grep 'ssh -Nf -L'|grep -v grep|awk '{print $2}'|xargs kill -9
+

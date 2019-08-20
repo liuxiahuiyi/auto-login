@@ -6,39 +6,53 @@ set user [lindex $argv 1]
 set password [lindex $argv 2]
 set port [lindex $argv 3]
 set length [llength $argv]
-if {$length>=5} {
+if {$length>=8} {
   set ip1 [lindex $argv 4]
-  set rsa_pub [lindex $argv 5]
-  set rsa_pub_replace [lindex $argv 6]
+  set user1 [lindex $argv 5]
+  set password1 [lindex $argv 6]
+  set port1 [lindex $argv 7]
+  set rsa_pub [lindex $argv 8]
+  set rsa_pub_replace [lindex $argv 9]
 }
-if {$length>=9} {
-  set ip2 [lindex $argv 5]
-  set user2 [lindex $argv 6]
-  set password2 [lindex $argv 7]
-  set port2 [lindex $argv 8]
-  set rsa_pub [lindex $argv 9]
-  set rsa_pub_replace [lindex $argv 10]
+if {$length>=12} {
+  set ip2 [lindex $argv 8]
+  set user2 [lindex $argv 9]
+  set password2 [lindex $argv 10]
+  set port2 [lindex $argv 11]
+  set rsa_pub [lindex $argv 12]
+  set rsa_pub_replace [lindex $argv 13]
 }
 
 spawn ssh $user@$ip -p $port
-expect "*password*"
+expect -nocase "*password*"
 send "$password\r"
-if {$length>=5} {
-  expect "*ID*"
-  send "$ip1\r"
+
+if {$length>=8} {
+  expect {
+    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
+    -nocase "*ID*"        {send "$ip1\r"}
+    -nocase "*$*"         {send "ssh $user1@$ip1 -p $port1\r";exp_continue}
+    -nocase "*password*"  {send "$password1\r"}
+    eof
+  }
+
   if [string compare $rsa_pub ""] {
     expect "*$*"
-    send "sed -i '/$rsa_pub_replace/d' ~/.ssh/authorized_keys && echo $rsa_pub >> ~/.ssh/authorized_keys\r"
+    send "echo >> ~/.ssh/authorized_keys && sed -i '/$rsa_pub_replace/d' ~/.ssh/authorized_keys && echo $rsa_pub >> ~/.ssh/authorized_keys\r"
   }
 }
-if {$length>=9} {
-  expect "*$*"
-  send "ssh $user2@$ip2 -p $port2\r"
-  expect "*password*"
-  send "$password2\r"
+
+if {$length>=12} {
+  expect {
+    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
+    -nocase "*ID*"        {send "$ip2\r"}
+    -nocase "*$*"         {send "ssh $user2@$ip2 -p $port2\r";exp_continue}
+    -nocase "*password*"  {send "$password2\r"}
+  }
+
   if [string compare $rsa_pub ""] {
     expect "*$*"
-    send "sed -i '/rsa_pub_replace/d' ~/.ssh/authorized_keys && echo $rsa_pub >> ~/.ssh/authorized_keys\r"
+    send "echo >> ~/.ssh/authorized_keys && sed -i '/rsa_pub_replace/d' ~/.ssh/authorized_keys && echo $rsa_pub >> ~/.ssh/authorized_keys\r"
   }
 }
 
