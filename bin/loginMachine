@@ -23,14 +23,14 @@ if {$length>=12} {
   set rsa_pub_replace [lindex $argv 13]
 }
 
-spawn ssh $user@$ip -p $port
+spawn ssh -o TCPKeepAlive=yes -o ServerAliveInterval=30 $user@$ip -p $port
 expect -nocase "*password*"
 send "$password\r"
 
 if {$length>=8} {
   expect {
     -nocase "*ID*"        {send "$ip1\r"}
-    -nocase "*$*"         {send "ssh $user1@$ip1 -p $port1\r"}
+    -nocase "*$*"         {send "ssh -o TCPKeepAlive=yes -o ServerAliveInterval=30 $user1@$ip1 -p $port1\r"}
     -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
   }
   expect {
@@ -48,7 +48,7 @@ if {$length>=8} {
 if {$length>=12} {
   expect {
     -nocase "*ID*"        {send "$ip2\r"}
-    -nocase "*$*"         {send "ssh $user2@$ip2 -p $port2\r"}
+    -nocase "*$*"         {send "ssh -o TCPKeepAlive=yes -o ServerAliveInterval=30 $user2@$ip2 -p $port2\r"}
     -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
   }
   expect {
