@@ -1,7 +1,6 @@
 nickname         ip            user             password                        port(=22)
-pivot         localhost      aegon.wang         Api_server2
+pivot         localhost      aegon.wang         Api_server3
 app_dev       10.74.11.7     aegon.wang         19920617
 flink_dev     10.74.11.8     aegon.wang         19920617
 jd           117.48.228.238   wangyike          19920617
-az_hadoop  ffha1dev-ssh.azurehdinsight.cn     aegon.wang    aegon.wang
 az_spark   ffsp1dev-ssh.azurehdinsight.cn     aegon.wang    aegon.wang

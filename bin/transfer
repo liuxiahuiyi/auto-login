@@ -24,6 +24,9 @@ if [ -z "$port1" ]; then
 fi
 listen_port=${ip1//./}
 listen_port=${listen_port:0:5}
+if [[ ${listen_port} == *[!0-9]* ]]; then
+  listen_port=12345
+fi
 sys=`uname -s`
 if [ "$sys" == "Darwin" ]; then
   sed -i '' "/^\[localhost\]:${listen_port}.*/d"  ~/.ssh/known_hosts
