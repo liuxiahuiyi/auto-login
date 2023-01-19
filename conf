@@ -1,6 +1,5 @@
 nickname         ip            user             password                        port(=22)
-pivot         localhost      aegon.wang         *
-app_dev       10.74.11.7     aegon.wang         *
-flink_dev     10.74.11.8     aegon.wang         *
-jd           117.48.228.238   wangyike          *
-az_spark   ffsp1dev-ssh.azurehdinsight.cn     aegon.wang    aegon.wang
+pivot         localhost      aegon.wang         Api_server8
+flink_dev     10.156.36.4     aegon.wang        aegon.wang
+doris_fe       10.156.36.8     aegon.wang          Farfetch2021!
+doris_be1      10.156.36.7     aegon.wang          Farfetch2021!

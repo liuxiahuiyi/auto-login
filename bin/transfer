@@ -23,7 +23,7 @@ if [ -z "$port1" ]; then
   port1=22
 fi
 listen_port=${ip1//./}
-listen_port=${listen_port:0:5}
+listen_port=${listen_port:(-5):5}
 if [[ ${listen_port} == *[!0-9]* ]]; then
   listen_port=12345
 fi

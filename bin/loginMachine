@@ -1,6 +1,6 @@
 #!/usr/bin/expect -f
 
-set timeout 10
+set timeout 3
 set ip [lindex $argv 0]
 set user [lindex $argv 1]
 set password [lindex $argv 2]
@@ -26,40 +26,44 @@ if {$length>=12} {
 spawn ssh -o TCPKeepAlive=yes -o ServerAliveInterval=30 $user@$ip -p $port
 expect -nocase "*password*"
 send "$password\r"
-
 if {$length>=8} {
   expect {
-    -nocase "*ID*"        {send "$ip1\r"}
-    -nocase "*$*"         {send "ssh -o TCPKeepAlive=yes -o ServerAliveInterval=30 $user1@$ip1 -p $port1\r"}
-    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
+    -nocase "*ID*"           {send "$ip1\r"}
+    -nocase "*(yes/no)?*"    {send "yes\r";sleep 2;exp_continue}
+    default                  {send "ssh -o TCPKeepAlive=yes -o ServerAliveInterval=30 $user1@$ip1 -p $port1\r"}
   }
   expect {
-    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
-    -nocase "*password*"  {send "$password1\r"}
-    -nocase "*$*"         {send "\r"}
+    -nocase "*(yes/no)?*"    {send "yes\r";sleep 2;exp_continue}
+    -nocase "*password*"     {send "$password1\r"}
+    default                  {send "\r"}
   }
 
+
   if [string compare $rsa_pub ""] {
-    expect "*$*"
-    send "echo >> ~/.ssh/authorized_keys && sed -i '/$rsa_pub_replace/d' ~/.ssh/authorized_keys && echo $rsa_pub >> ~/.ssh/authorized_keys\r"
+    sleep 2
+    send "echo >> ~/.ssh/authorized_keys && sed -i '/rsa_pub_replace/d' ~/.ssh/authorized_keys && echo $rsa_pub >> ~/.ssh/authorized_keys\r"
+    send "chmod 700 ~/.ssh\r" 
+    send "chmod 644 ~/.ssh/authorized_keys\r"
   }
 }
 
 if {$length>=12} {
   expect {
-    -nocase "*ID*"        {send "$ip2\r"}
-    -nocase "*$*"         {send "ssh -o TCPKeepAlive=yes -o ServerAliveInterval=30 $user2@$ip2 -p $port2\r"}
-    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
+    -nocase "*ID*"           {send "$ip2\r"}
+    -nocase "*(yes/no)?*"    {send "yes\r";sleep 2;exp_continue}
+    default                  {send "ssh -o TCPKeepAlive=yes -o ServerAliveInterval=30 $user2@$ip2 -p $port2\r"}
   }
   expect {
-    -nocase "*(yes/no)?*" {send "yes\r";exp_continue}
-    -nocase "*password*"  {send "$password2\r"}
-    -nocase "*$*"         {send "\r"}
+    -nocase "*(yes/no)?*"    {send "yes\r";sleep 2;exp_continue}
+    -nocase "*password*"     {send "$password2\r"}
+    default                  {send "\r"}
   }
 
   if [string compare $rsa_pub ""] {
-    expect "*$*"
+    sleep 2
     send "echo >> ~/.ssh/authorized_keys && sed -i '/rsa_pub_replace/d' ~/.ssh/authorized_keys && echo $rsa_pub >> ~/.ssh/authorized_keys\r"
+    send "chmod 700 ~/.ssh\r" 
+    send "chmod 644 ~/.ssh/authorized_keys\r"
   }
 }
 
