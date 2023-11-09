@@ -1,5 +1,6 @@
 nickname         ip            user             password                        port(=22)
-pivot         localhost      aegon.wang         Api_server8
+pivot         localhost      aegon.wang         Api_server1
 flink_dev     10.156.36.4     aegon.wang        aegon.wang
 doris_fe       10.156.36.8     aegon.wang          Farfetch2021!
 doris_be1      10.156.36.7     aegon.wang          Farfetch2021!
+ali          39.96.84.3       ecs-user          Api_server1
