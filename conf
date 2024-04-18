@@ -1,6 +1,5 @@
-nickname         ip            user             password                        port(=22)
-pivot         localhost      aegon.wang         Api_server1
-flink_dev     10.156.36.4     aegon.wang        aegon.wang
-doris_fe       10.156.36.8     aegon.wang          Farfetch2021!
-doris_be1      10.156.36.7     aegon.wang          Farfetch2021!
-ali          39.96.84.3       ecs-user          Api_server1
+nickname         ip              user             password                        port(=22)
+pivot        relay.xiaomi.com   wangyike1         Api_server1
+airflow_dev  c3-miui-ad-bi01.bj wangyike1         null
+bi_prd       c3-miui-ad-bi22.bj wangyike1         null
+bi_dev       c3-miui-ad-bi30.bj wangyike1         null
